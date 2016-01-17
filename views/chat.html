@@ -5,15 +5,15 @@
 
 		<title>Chat Room</title>
 
-		<link type="text/css" rel="stylesheet" href="../css/stylesheet.css" />
+		<link rel="stylesheet" href="../css/stylesheet.css" />
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans Condensed:300italic,300,700" rel="stylesheet" type="text/css">
 	</head>
 
 	<body>
 
-		<header class="mainbanner">
+		<header class="banner">
 
-			<h1 class="mainbannertext">
+			<h1 class="bannertext">
 				<a id="logo">Private<span>Chat</span></a>
 			</h1>
 
@@ -22,84 +22,90 @@
 		<section class="section">
 
 			<div class="connected">
-				<img src="../img/user.png" id="createIcon" />
 
-				<div class="infoConnected">
-					<h2></h2>
-					<br/>
-					<form class="loginForm">
-						<input type="text" id="name" placeholder="Screen Name" /><br/>
-						<input type="text" id="email" placeholder="Email Address" /><br/>
-						<input type="submit" id="enter" value="Enter Chat Room" />
-					</form>
-				</div>
+			<img src="../img/unnamed.jpg" id="creatorImage" />
 
-			</div>
+			<div class="infoConnected">
+				<h2>Who are you?</h2>
+				<br/>
 
-			<div class="personinside">
-
-				<img src="../img/user.png" id="chatIcon" />
-				<div class="infoInside">
-					<h2>Chat with <span class="nickname-chat"></span></h2>
-					<br/>
-
-					<form class="loginForm">
-						<input type="text" id="hisName" placeholder="Your nick name" /><br/>
-						<input type="text" id="hisEmail" placeholder="Your email address" /><br/>
-						<input type="submit" id="hisEnter" value="CHAT" />
-					</form>
-
-				</div>
+				<form class="loginForm">
+					<input type="text" id="yourName" placeholder="Your nick name" /><br/>
+					<input type="text" id="yourEmail" placeholder="Your email address" /><br/>
+					<input type="submit" id="yourEnter" value="ENTER" />
+				</form>
 
 			</div>
 
-			<div class="invite-textfield">
+		</div>
 
-				<h2>Oops, there are no other people in this chat!</h2>
-				<h5>Invite a friend by sending them this URL</h5>
+		<div class="personinside">
 
-				<div class="link">
-					<a title="Invite a friend" href="" id="link"></a>
-				</div>
+			<img src="../img/unnamed.jpg" id="ownerImage" />
 
-			</div>
+			<div class="infoInside">
+				<h2>Chat with <span class="nickname-chat"></span></h2>
+				<br/>
 
-			<div class="left">
-
-				<img src="../img/unnamed.jpg" id="leftImage" />
-
-				<div class="info">
-					<h2><span class="nickname-left"></span> has left this chat.</h2>
-					<h5>Invite somebody else by sending them this page.</h5>
-				</div>
+				<form class="loginForm">
+					<input type="text" id="hisName" placeholder="Your nick name" /><br/>
+					<input type="text" id="hisEmail" placeholder="Your email address" /><br/>
+					<input type="submit" id="hisEnter" value="CHAT" />
+				</form>
 
 			</div>
 
-			<div class="toomanypeople">
+		</div>
 
-				<h2>Oops, you can not join this chat!</h2>
-				<h5>There are already two people in it. Would you like to create a <a title="New Room" href="/create" id="room">new room</a>?</h5>
+		<div class="invite-textfield">
 
+			<h2>Oops, there are no other people in this chat!</h2>
+			<h5>Invite a friend by sending them this URL</h5>
+
+			<div class="link">
+				<a title="Invite a friend" href="" id="link"></a>
 			</div>
 
-			<div class="nomessages">
+		</div>
 
-				<img src="../img/unnamed.jpg" id="noMessagesImage" />
+		<div class="left">
 
-				<div class="info">
-					<h2>You are chatting with <span class="nickname-chat"></span>.</h2>
-					<h5>Send them a message from the form below!</h5>
-				</div>
+			<img src="../img/unnamed.jpg" id="leftImage" />
 
+			<div class="info">
+				<h2><span class="nickname-left"></span> has left this chat.</h2>
+				<h5>Invite somebody else by sending them this page.</h5>
 			</div>
 
-			<div class="chatscreen">
+		</div>
 
-				<ul class="chats">
-				</ul>
+		<div class="toomanypeople">
+
+			<h2>Oops, you can not join this chat!</h2>
+			<h5>There are already two people in it. Would you like to create a <a title="New Room" href="/create" id="room">new room</a>?</h5>
+
+		</div>
+
+		<div class="nomessages">
+
+			<img src="../img/unnamed.jpg" id="noMessagesImage" />
+
+			<div class="info">
+				<h2>You are chatting with <span class="nickname-chat"></span>.</h2>
+				<h5>Send them a message from the form below!</h5>
 			</div>
 
-		</section>
+		</div>
+
+		<div class="chatscreen">
+
+			<ul class="chats">
+				<!-- The chat messages will go here -->
+			</ul>
+
+		</div>
+
+	</section>
 
 		<footer>
 			<form id="chatform">

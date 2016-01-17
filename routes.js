@@ -1,75 +1,108 @@
-module.exports = function(app, socketio){
+var gravatar = require('gravatar');
+
+module.exports = function(app, io){
+
 	app.get('/', function(req, res){
 		res.render('home');
 	});
+
 	app.get('/create', function(req,res){
-		var id = Math.round((Math.random() * 10000000)); //random room id
+		var id = Math.round((Math.random() * 1000000));
 		res.redirect('/chat/'+id);
 	});
+
 	app.get('/chat/:id', function(req,res){
 		res.render('chat');
 	});
-	var socketChat = socketio.of('/socket').on('connection', function (socket) {
+
+	var chat = io.on('connection', function (sockets) {
 		
-		socket.on('load',function(data){
+		sockets.on('load',function(data){
 
-			var room = findClientsSocket(socketio,data,'/socket');
-			socket.emit('peopleinchat', {number: room.length});
+			var room = findClientsSocket(io, data);
+			if(room.length === 0 ) {
+
+				sockets.emit('peopleinchat', {number: 0});
+			}
+			else if(room.length === 1) {
+
+				sockets.emit('peopleinchat', {
+					number: 1,
+					user: room[0].username,
+					avatar: room[0].avatar,
+					id: data
+				});
+			}
+			else if(room.length >= 2) {
+
+				chat.emit('tooMany', {boolean: true});
+			}
 		});
-		socket.on('login', function(data) {
+		sockets.on('login', function(data) {
 
-			var room = findClientsSocket(io, data.id, '/socket');
+			var room = findClientsSocket(io, data.id);
 			if (room.length < 2) {
-				socket.username = data.user;
-				socket.room = data.id;
-				socket.join(data.id);
+				sockets.username = data.user;
+				sockets.room = data.id;
+				sockets.avatar = gravatar.url(data.avatar, {s: '140', r: 'x', d: 'mm'});
+
+				sockets.emit('img', sockets.avatar);
+				sockets.join(data.id);
 
 				if (room.length == 1) {
-					var usernames = []
+					var usernames = [],
+						avatars = [];
 					usernames.push(room[0].username);
-					usernames.push(socket.username);
+					usernames.push(sockets.username);
+
+					avatars.push(room[0].avatar);
+					avatars.push(sockets.avatar);
 					
 					chat.in(data.id).emit('startChat', {
 						boolean: true,
 						id: data.id,
 						users: usernames,
+						avatars: avatars
 					});
 				}
 			}
 			else {
-				socket.emit('tooMany', {boolean: true});
+				sockets.emit('tooMany', {boolean: true});
 			}
 		});
 
-		socket.on('disconnect', function() {
-			socket.broadcast.to(this.room).emit('leave', {
+		sockets.on('disconnect', function() {
+			sockets.broadcast.to(this.room).emit('leave', {
 				boolean: true,
 				room: this.room,
 				user: this.username,
+				avatar: this.avatar
 			});
 			// leave the room
-			socket.leave(socket.room);
+			sockets.leave(sockets.room);
 		});
 
-		socket.on('msg', function(data){
-			socket.broadcast.to(socket.room).emit('receive', {msg: data.msg, user: data.user});
+		sockets.on('msg', function(data){
+			sockets.broadcast.to(sockets.room).emit('receive', {msg: data.msg, user: data.user, img: data.img});
 		});
 	});
 };
 
-function findClientsSocket(socketio,roomId, namespace) {
+function findClientsSocket(io, roomId, namespace) {
 	var res = [],
-		namespace = socketio.of(namespace ||"/");
-	if (namespace) {
-		for (var id in namespace.connected) {
+		ns = io.of(namespace ||"/");
+	if (ns) {
+		for (var id in ns.connected) {
 			if(roomId) {
-				var index = namespace.connected[id].rooms.indexOf(roomId) ;
+				console.log(ns.connected[id].rooms);
+				console.log(roomId);
+				var index = ns.connected[id].rooms.indexOf(roomId);
 				if(index !== -1) {
-					res.push(namespace.connected[id]);
+					res.push(ns.connected[id]);
 				}
 			}
 			else {
-				res.push(namespace.connected[id]);
+				res.push(ns.connected[id]);
 			}
 		}
 	}
